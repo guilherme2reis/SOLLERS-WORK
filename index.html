@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f172a">
+<!-- fora dos resultados de busca: o app é de uso pessoal -->
+<meta name="robots" content="noindex, nofollow">
+<title>AGENDEI</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="AGENDEI">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1 id="titulo-view">📅 AGENDEI</h1>
+</header>
+
+<main>
+
+  <!-- ============ AGENDA ============ -->
+  <section id="view-agenda" class="view ativa">
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-label">Hoje</span>
+        <span class="stat-value" id="stat-hoje">—</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Próximos 7 dias</span>
+        <span class="stat-value" id="stat-semana">—</span>
+      </div>
+    </div>
+
+    <button type="button" class="btn-acao btn-acao-principal" data-ir="nova">
+      <span class="btn-acao-icone">➕</span>
+      <span class="btn-acao-texto">Nova tarefa</span>
+    </button>
+
+    <div id="agenda-vazia" class="card empty-state" hidden>
+      Nada marcado. 🎉<br>Toque em <strong>Nova tarefa</strong> para lançar um compromisso.
+    </div>
+
+    <div id="lista-dias"></div>
+
+  </section>
+
+  <!-- ============ NOVA TAREFA ============ -->
+  <section id="view-nova" class="view">
+    <section class="card">
+      <h2 id="titulo-form">Nova tarefa</h2>
+      <form id="form-tarefa">
+        <div class="field">
+          <label for="titulo">O que fazer</label>
+          <input type="text" id="titulo" placeholder="ex: levar o carro na revisão" autocomplete="off" required>
+        </div>
+
+        <div class="field">
+          <label for="data">Dia</label>
+          <input type="date" id="data" required>
+          <div class="atalhos">
+            <button type="button" class="atalho" data-dias="0">Hoje</button>
+            <button type="button" class="atalho" data-dias="1">Amanhã</button>
+            <button type="button" class="atalho" data-dias="7">Daqui 1 semana</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="hora">Horário <span class="opcional">(opcional)</span></label>
+          <div class="linha-hora">
+            <input type="time" id="hora">
+            <button type="button" class="btn-limpar-hora" id="btn-limpar-hora">Sem horário</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="obs">Observação <span class="opcional">(opcional)</span></label>
+          <input type="text" id="obs" placeholder="ex: oficina da Av. Brasil" autocomplete="off">
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-salvar">Adicionar tarefa</button>
+        <button type="button" class="btn-secundario" id="btn-cancelar-edicao" hidden>Cancelar edição</button>
+      </form>
+    </section>
+  </section>
+
+  <!-- ============ FEITAS ============ -->
+  <section id="view-feitas" class="view">
+    <section class="card">
+      <h2>Dias que já passaram</h2>
+      <p class="texto-ajuda">
+        Tarefas concluídas em dias anteriores a hoje. Toque no ✓ para reabrir uma tarefa.
+      </p>
+      <div id="feitas-vazio" class="empty-state" hidden>
+        Nenhuma tarefa concluída em dias anteriores.
+      </div>
+    </section>
+    <div id="lista-feitas"></div>
+  </section>
+
+  <!-- ============ DADOS / BACKUP ============ -->
+  <section id="view-dados" class="view">
+
+    <section class="card">
+      <h2>Backup das tarefas</h2>
+      <p class="texto-ajuda">
+        Suas tarefas ficam salvas apenas neste aparelho. Exporte um CSV de tempos em tempos
+        para não perder nada se trocar de celular ou limpar os dados do navegador. O arquivo
+        abre direto no Excel.
+      </p>
+      <button type="button" class="btn-primary" id="btn-exportar">⬇️ Exportar CSV</button>
+
+      <div class="separador"></div>
+
+      <p class="texto-ajuda">
+        Importar um CSV exportado por este app. As tarefas são somadas às que já existem —
+        as idênticas são ignoradas, então dá para importar o mesmo arquivo duas vezes sem duplicar.
+      </p>
+      <button type="button" class="btn-secundario" id="btn-importar">⬆️ Importar CSV</button>
+      <input type="file" id="input-arquivo" accept=".csv,text/csv" hidden>
+      <div id="status-importacao" class="status-importacao" hidden></div>
+    </section>
+
+    <section class="card">
+      <h2>Limpar concluídas</h2>
+      <p class="texto-ajuda">
+        Remove as tarefas já feitas de dias que passaram (as da tela <strong>Feitas</strong>).
+      </p>
+      <button type="button" class="btn-secundario" id="btn-limpar-feitas">🧹 Limpar concluídas antigas</button>
+    </section>
+
+    <section class="card">
+      <h2>Apagar tudo</h2>
+      <p class="texto-ajuda">
+        Remove todas as tarefas deste aparelho. Exporte um CSV antes — não dá para desfazer.
+      </p>
+      <button type="button" class="btn-perigo" id="btn-apagar-tudo">Apagar todas as tarefas</button>
+    </section>
+
+  </section>
+
+  <footer class="rodape">
+    📅 AGENDEI · versão <span id="versao">—</span>
+  </footer>
+
+</main>
+
+<nav class="tabbar">
+  <button type="button" class="tab ativa" data-ir="agenda">
+    <span class="tab-icone">📅</span><span class="tab-label">Agenda</span>
+  </button>
+  <button type="button" class="tab" data-ir="nova">
+    <span class="tab-icone">➕</span><span class="tab-label">Nova</span>
+  </button>
+  <button type="button" class="tab" data-ir="feitas">
+    <span class="tab-icone">✓</span><span class="tab-label">Feitas</span>
+  </button>
+  <button type="button" class="tab" data-ir="dados">
+    <span class="tab-icone">💾</span><span class="tab-label">Dados</span>
+  </button>
+</nav>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>

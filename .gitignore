@@ -1,0 +1,5 @@
+# backups exportados: ficam só no computador, não no repositório público
+*.csv
+
+# configuração local do editor
+.claude/
