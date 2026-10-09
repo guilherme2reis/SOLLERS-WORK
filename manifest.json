@@ -1,6 +1,6 @@
 {
-  "name": "AGENDEI",
-  "short_name": "AGENDEI",
+  "name": "TO DO",
+  "short_name": "TO DO",
   "description": "Agenda simples: só aparecem os dias com tarefas",
   "start_url": "./index.html",
   "display": "standalone",
