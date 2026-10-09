@@ -31,7 +31,7 @@ depende de diferenciar verde e vermelho, e sempre há um símbolo junto (✓, �
 
 Os dados ficam **só neste aparelho**. Exporte um CSV de tempos em tempos.
 
-**Exportar** gera `agendei-AAAA-MM-DD.csv` com as colunas
+**Exportar** gera `sollers-work-AAAA-MM-DD.csv` com as colunas
 `Data;Horário;Tarefa;Observação;Feita`, que abre direto no Excel.
 
 **Importar** aceita esse mesmo formato (datas `09/10/2026` ou `2026-10-09`, horário `14:30` ou
@@ -42,11 +42,11 @@ tudo de uma vez.
 
 ## Publicar no GitHub Pages
 
-1. Crie um repositório novo (por exemplo `agendei`).
+1. Crie um repositório novo (`SOLLERS-WORK`).
 2. Envie `index.html`, `style.css`, `app.js`, `manifest.json`, `sw.js`, `icon-192.png` e
    `icon-512.png` para a raiz.
 3. Em **Settings → Pages**, escolha a branch `main` e a pasta `/ (root)`.
-4. O app fica em `https://guilherme2reis.github.io/agendei/`.
+4. O app fica em `https://guilherme2reis.github.io/SOLLERS-WORK/`.
 
 No celular, abra o endereço e use **Adicionar à tela de início**.
 
@@ -55,8 +55,8 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = 'agendei-1.0.3';` em `sw.js`
-- `const VERSAO = '1.0.3';` em `app.js`
+- `const CACHE = 'sollers-work-1.1.0';` em `sw.js`
+- `const VERSAO = '1.1.0';` em `app.js`
 
 ## Rodar no computador
 

@@ -1,5 +1,7 @@
-const VERSAO = '1.0.3';
-const STORAGE_KEY = 'agendei.tarefas';
+const VERSAO = '1.1.0';
+const STORAGE_KEY = 'sollerswork.tarefas';
+// chave da primeira versão do app: lida enquanto a nova ainda não existe, para não perder nada
+const STORAGE_KEY_ANTIGA = 'agendei.tarefas';
 
 /** @typedef {{id:string, titulo:string, data:string, hora:string, obs:string, feita:boolean, criadoEm:number}} Tarefa */
 
@@ -24,7 +26,9 @@ let memoria = null;
 /** @returns {Tarefa[]} */
 function carregar() {
   try {
-    const raw = memoria !== null ? memoria : localStorage.getItem(STORAGE_KEY);
+    const raw = memoria !== null
+      ? memoria
+      : localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(STORAGE_KEY_ANTIGA);
     const lista = raw ? JSON.parse(raw) : [];
     if (!Array.isArray(lista)) return [];
     return lista
@@ -414,7 +418,7 @@ function exportarCSV() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `agendei-${hojeISO()}.csv`;
+  link.download = `sollers-work-${hojeISO()}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -644,6 +648,7 @@ function init() {
     memoria = null;
     try {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(STORAGE_KEY_ANTIGA);
     } catch { /* nada salvo para remover */ }
     render();
     mostrarToast('Todas as tarefas foram apagadas.');

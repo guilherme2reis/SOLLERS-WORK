@@ -1,4 +1,4 @@
-const CACHE = 'agendei-1.0.3';
+const CACHE = 'sollers-work-1.1.0';
 const ARQUIVOS = ['./', './index.html', './style.css', './app.js', './manifest.json',
   './icon-192.png', './icon-512.png'];
 
