@@ -1,4 +1,4 @@
-const VERSAO = '1.0.1';
+const VERSAO = '1.0.2';
 const STORAGE_KEY = 'agendei.tarefas';
 
 /** @typedef {{id:string, titulo:string, data:string, hora:string, obs:string, feita:boolean, criadoEm:number}} Tarefa */
@@ -7,7 +7,7 @@ const DIAS_SEMANA = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta'
 const DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 
 const TITULOS = {
-  agenda: '📅 TO DO',
+  agenda: '📅 SOLLERS WORK',
   nova: 'Nova tarefa',
   feitas: 'Feitas',
   dados: 'Dados e backup',

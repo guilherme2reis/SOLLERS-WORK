@@ -1,4 +1,4 @@
-const CACHE = 'agendei-1.0.1';
+const CACHE = 'agendei-1.0.2';
 const ARQUIVOS = ['./', './index.html', './style.css', './app.js', './manifest.json'];
 
 self.addEventListener('install', (event) => {
