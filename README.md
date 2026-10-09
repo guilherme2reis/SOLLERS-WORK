@@ -55,8 +55,8 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = 'agendei-1.0.2';` em `sw.js`
-- `const VERSAO = '1.0.2';` em `app.js`
+- `const CACHE = 'agendei-1.0.3';` em `sw.js`
+- `const VERSAO = '1.0.3';` em `app.js`
 
 ## Rodar no computador
 

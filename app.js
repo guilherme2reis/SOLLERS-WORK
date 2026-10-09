@@ -1,4 +1,4 @@
-const VERSAO = '1.0.2';
+const VERSAO = '1.0.3';
 const STORAGE_KEY = 'agendei.tarefas';
 
 /** @typedef {{id:string, titulo:string, data:string, hora:string, obs:string, feita:boolean, criadoEm:number}} Tarefa */
