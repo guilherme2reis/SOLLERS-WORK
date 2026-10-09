@@ -1,7 +1,6 @@
 # SOLLERS WORK
 
-Agenda simples em forma de lista de tarefas, no mesmo padrão do
-[app de combustível](https://guilherme2reis.github.io/combustivel/) e do GASTEI: página única,
+Agenda simples em forma de lista de tarefas: página única,
 funciona no celular, instalável na tela de início e sem servidor — os dados ficam salvos no
 próprio aparelho (`localStorage`).
 
@@ -55,8 +54,8 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = 'sollers-work-1.1.0';` em `sw.js`
-- `const VERSAO = '1.1.0';` em `app.js`
+- `const CACHE = `${PREFIXO}1.1.1`;` em `sw.js`
+- `const VERSAO = '1.1.1';` em `app.js`
 
 ## Rodar no computador
 

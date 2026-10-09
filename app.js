@@ -1,4 +1,4 @@
-const VERSAO = '1.1.0';
+const VERSAO = '1.1.1';
 const STORAGE_KEY = 'sollerswork.tarefas';
 // chave da primeira versão do app: lida enquanto a nova ainda não existe, para não perder nada
 const STORAGE_KEY_ANTIGA = 'agendei.tarefas';

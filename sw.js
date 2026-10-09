@@ -1,4 +1,5 @@
-const CACHE = 'sollers-work-1.1.0';
+const PREFIXO = 'sollers-work-';
+const CACHE = `${PREFIXO}1.1.1`;
 const ARQUIVOS = ['./', './index.html', './style.css', './app.js', './manifest.json',
   './icon-192.png', './icon-512.png'];
 
@@ -11,8 +12,12 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
+    // apaga só as versões antigas deste app: os outros apps do mesmo endereço
+    // (guilherme2reis.github.io) usam o mesmo espaço de cache e não podem ser tocados
     caches.keys().then((chaves) =>
-      Promise.all(chaves.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
+      Promise.all(chaves
+        .filter((k) => k.startsWith(PREFIXO) && k !== CACHE)
+        .map((k) => caches.delete(k)))
     )
   );
   self.clients.claim();
