@@ -1,5 +1,5 @@
 const PREFIXO = 'sollers-work-';
-const CACHE = `${PREFIXO}1.1.1`;
+const CACHE = `${PREFIXO}1.2.0`;
 const ARQUIVOS = ['./', './index.html', './style.css', './app.js', './manifest.json',
   './icon-192.png', './icon-512.png'];
 
@@ -26,6 +26,8 @@ self.addEventListener('activate', (event) => {
 // com internet busca sempre a versão nova (e guarda); sem internet usa a guardada
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // tarefas do arquivo do computador: sempre direto do servidor, nunca de cópia guardada
+  if (new URL(event.request.url).pathname.includes('/api/')) return;
   event.respondWith(
     fetch(event.request)
       .then((resposta) => {

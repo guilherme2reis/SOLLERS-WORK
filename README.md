@@ -54,10 +54,24 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = `${PREFIXO}1.1.1`;` em `sw.js`
-- `const VERSAO = '1.1.1';` em `app.js`
+- `const CACHE = `${PREFIXO}1.2.0`;` em `sw.js`
+- `const VERSAO = '1.2.0';` em `app.js`
 
-## Rodar no computador
+## No computador (atalho da Área de Trabalho)
+
+O atalho **SOLLERS WORK** roda `iniciar.pyw` (Python, sem janela preta). Ele liga um
+servidor que só este computador enxerga (`127.0.0.1:8731`) e abre o app numa janela do Chrome.
+
+No computador as tarefas ficam gravadas em **`dados.json`**, nesta pasta, e não na memória
+do navegador. Por isso não importa em qual perfil do Chrome a janela abre, nem se os dados
+do navegador forem limpos. Toda gravação também deixa uma cópia do dia em `backups/`
+(as dos últimos 60 dias).
+
+`dados.json` e `backups/` estão no `.gitignore`: são seus dados e não vão para o GitHub.
+
+Se aparecer o aviso "⚠ Não gravou no arquivo", feche a janela e abra pelo atalho de novo.
+
+## Rodar no computador (para mexer no código)
 
 ```bash
 python -m http.server 8125

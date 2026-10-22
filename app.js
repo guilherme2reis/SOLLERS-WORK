@@ -1,4 +1,4 @@
-const VERSAO = '1.1.1';
+const VERSAO = '1.2.0';
 const STORAGE_KEY = 'sollerswork.tarefas';
 // chave da primeira versão do app: lida enquanto a nova ainda não existe, para não perder nada
 const STORAGE_KEY_ANTIGA = 'agendei.tarefas';
@@ -47,16 +47,73 @@ function carregar() {
   }
 }
 
-/** @param {Tarefa[]} lista */
-function salvar(lista) {
-  const json = JSON.stringify(lista);
+/** Cópia do navegador. Retorna false quando ele não deixa gravar (aba privada, cota cheia). */
+function guardarCopiaLocal(json) {
   try {
     localStorage.setItem(STORAGE_KEY, json);
     memoria = null;
+    return true;
   } catch {
-    // sem armazenamento os dados valem só até fechar a aba, então avisa
     memoria = json;
+    return false;
+  }
+}
+
+/** @param {Tarefa[]} lista */
+function salvar(lista) {
+  const json = JSON.stringify(lista);
+  const gravouLocal = guardarCopiaLocal(json);
+
+  if (arquivoAtivo) {
+    enviarParaArquivo(json);
+  } else if (!gravouLocal) {
+    // sem armazenamento os dados valem só até fechar a aba, então avisa
     mostrarToast('Este navegador não deixou salvar. Exporte um CSV!');
+  }
+}
+
+/* ==================== arquivo no computador ==================== */
+
+/*
+ * Aberto pelo atalho da Área de Trabalho, o app roda no servidor local do
+ * iniciar.pyw e grava tudo em dados.json, na pasta do app. O arquivo é quem
+ * manda: a memória do Chrome muda de perfil para perfil e pode ser limpa,
+ * o arquivo não. No celular (GitHub Pages) não existe /api e nada disso roda.
+ */
+const API_TAREFAS = 'api/tarefas';
+
+/** true quando o servidor do computador respondeu e as gravações vão para dados.json. */
+let arquivoAtivo = false;
+
+function enviarParaArquivo(json) {
+  fetch(API_TAREFAS, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: json,
+    keepalive: true,
+  })
+    .then((r) => { if (!r.ok) throw new Error(String(r.status)); })
+    .catch(() => mostrarToast('⚠ Não gravou no arquivo. Feche e abra pelo atalho de novo.'));
+}
+
+async function carregarDoArquivo() {
+  let resposta;
+  try {
+    resposta = await fetch(API_TAREFAS, { cache: 'no-store' });
+  } catch {
+    return;
+  }
+  if (!resposta.ok || resposta.headers.get('X-Sollers-Work') !== '1') return;
+
+  const { existe, tarefas } = await resposta.json();
+  arquivoAtivo = true;
+
+  if (existe && Array.isArray(tarefas)) {
+    guardarCopiaLocal(JSON.stringify(tarefas));
+    render();
+  } else {
+    // primeira vez com o arquivo: leva para ele o que já estava no navegador
+    enviarParaArquivo(JSON.stringify(carregar()));
   }
 }
 
@@ -645,11 +702,11 @@ function init() {
     const ok = confirm(`Apagar todas as ${total} tarefas deste aparelho?\n\nIsso não pode ser desfeito.`);
     if (!ok) return;
 
-    memoria = null;
     try {
-      localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(STORAGE_KEY_ANTIGA);
     } catch { /* nada salvo para remover */ }
+    // grava a lista vazia (e não só apaga) para o arquivo do computador também ficar vazio
+    salvar([]);
     render();
     mostrarToast('Todas as tarefas foram apagadas.');
   });
@@ -664,6 +721,7 @@ function init() {
   });
 
   render();
+  carregarDoArquivo();
 }
 
 init();

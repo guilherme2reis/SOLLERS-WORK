@@ -6,3 +6,8 @@
 
 # ícone do atalho da Área de Trabalho (só no computador)
 icon.ico
+
+# tarefas do computador (gravadas pelo iniciar.pyw): dados pessoais, ficam só aqui
+dados.json
+dados.tmp
+backups/
