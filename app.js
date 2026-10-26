@@ -1,8 +1,9 @@
-const VERSAO = '1.2.0';
+const VERSAO = '1.3.0';
 const STORAGE_KEY = 'sollerswork.tarefas';
 // chave da primeira versão do app: lida enquanto a nova ainda não existe, para não perder nada
 const STORAGE_KEY_ANTIGA = 'agendei.tarefas';
 
+/** data vazia ('') = tarefa sem data, que fica na aba Sem data. */
 /** @typedef {{id:string, titulo:string, data:string, hora:string, obs:string, feita:boolean, criadoEm:number}} Tarefa */
 
 const DIAS_SEMANA = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
@@ -11,6 +12,7 @@ const DIAS_CURTOS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 const TITULOS = {
   agenda: '📅 SOLLERS WORK',
   nova: 'Nova tarefa',
+  semdata: '📌 Sem data',
   feitas: 'Feitas',
   dados: 'Dados e backup',
 };
@@ -41,7 +43,7 @@ function carregar() {
         feita: Boolean(item.feita),
         criadoEm: Number(item.criadoEm) || i,
       }))
-      .filter((item) => item.data !== '' && item.titulo !== '');
+      .filter((item) => item.titulo !== '');
   } catch {
     return [];
   }
@@ -151,6 +153,7 @@ function diasEntre(deIso, ateIso) {
 }
 
 function formatoData(iso) {
+  if (!iso) return '';
   const [ano, mes, dia] = iso.split('-');
   return `${dia}/${mes}/${ano}`;
 }
@@ -197,11 +200,18 @@ function agruparPorDia(lista) {
   return grupos;
 }
 
-/** Atrasadas = dias passados com algo pendente. Feitas antigas vão para a tela Feitas. */
+/**
+ * Atrasadas = dias passados com algo pendente. Feitas antigas vão para a tela Feitas.
+ * Sem data = ainda não decidi quando; pendentes primeiro, na ordem em que foram lançadas.
+ */
 function separar(lista) {
   const hoje = hojeISO();
-  const ordenada = [...lista].sort(ordenarNoDia);
+  const semData = lista
+    .filter((t) => !t.data)
+    .sort((a, b) => Number(a.feita) - Number(b.feita) || a.criadoEm - b.criadoEm);
+  const ordenada = lista.filter((t) => t.data).sort(ordenarNoDia);
   return {
+    semData,
     atrasadas: ordenada.filter((t) => t.data < hoje && !t.feita),
     futuras: ordenada.filter((t) => t.data >= hoje),
     feitasAntigas: ordenada.filter((t) => t.data < hoje && t.feita),
@@ -245,9 +255,11 @@ function criarItem(t, opcoes = {}) {
   check.setAttribute('aria-label', t.feita ? 'Marcar como não feita' : 'Marcar como feita');
   check.addEventListener('click', () => alternarFeita(t));
 
+  // sem data não tem horário: o espaço fica para o texto
   const hora = document.createElement('span');
   hora.className = 'item-hora' + (t.hora ? '' : ' sem-hora');
   hora.textContent = t.hora || 'dia todo';
+  hora.hidden = !t.data;
 
   const info = document.createElement('button');
   info.type = 'button';
@@ -345,6 +357,32 @@ function renderAgenda(lista) {
     pendHoje === 0 ? 'Livre' : plural(pendHoje, 'tarefa', 'tarefas');
   document.getElementById('stat-semana').textContent =
     pendSemana === 0 ? 'Livre' : plural(pendSemana, 'tarefa', 'tarefas');
+
+  // lembrete na agenda de que existe coisa por fazer sem dia marcado
+  const pendSemData = separar(lista).semData.filter((t) => !t.feita).length;
+  const atalhoSemData = document.getElementById('btn-ver-sem-data');
+  atalhoSemData.hidden = pendSemData === 0;
+  document.getElementById('texto-ver-sem-data').textContent =
+    `Sem data · ${plural(pendSemData, 'tarefa', 'tarefas')}`;
+}
+
+function renderSemData(lista) {
+  const { semData } = separar(lista);
+  const pendentes = semData.filter((t) => !t.feita);
+  const feitas = semData.filter((t) => t.feita);
+
+  const ulPendentes = document.getElementById('lista-sem-data');
+  ulPendentes.innerHTML = '';
+  for (const t of pendentes) ulPendentes.appendChild(criarItem(t));
+
+  const ulFeitas = document.getElementById('lista-sem-data-feitas');
+  ulFeitas.innerHTML = '';
+  for (const t of feitas) ulFeitas.appendChild(criarItem(t));
+
+  document.getElementById('sem-data-vazio').hidden = pendentes.length > 0;
+  document.getElementById('bloco-sem-data-feitas').hidden = feitas.length === 0;
+  document.getElementById('total-sem-data').textContent =
+    pendentes.length === 0 ? '' : plural(pendentes.length, 'pendente', 'pendentes');
 }
 
 function renderFeitas(lista) {
@@ -369,6 +407,7 @@ function renderFeitas(lista) {
 function render() {
   const lista = carregar();
   renderAgenda(lista);
+  renderSemData(lista);
   renderFeitas(lista);
 }
 
@@ -549,8 +588,9 @@ function importarCSV(texto) {
     if (/^data$/i.test(data)) continue; // cabeçalho
 
     resultado.total++;
-    const iso = parseDataParaISO(data);
-    if (!iso || !titulo) {
+    // data em branco = tarefa sem data; data que não dá para ler = linha inválida
+    const iso = data ? parseDataParaISO(data) : '';
+    if ((data && !iso) || !titulo) {
       resultado.invalidos++;
       continue;
     }
@@ -559,7 +599,7 @@ function importarCSV(texto) {
       id: gerarId(),
       titulo,
       data: iso,
-      hora: parseHora(hora),
+      hora: iso ? parseHora(hora) : '',
       obs,
       feita: /^(sim|s|x|1|true)$/i.test(feita),
       criadoEm: Date.now() + resultado.total,
@@ -604,6 +644,17 @@ function init() {
     });
   });
 
+  document.getElementById('btn-sem-data').addEventListener('click', () => {
+    document.getElementById('data').value = '';
+    document.getElementById('hora').value = '';
+  });
+
+  // "Nova tarefa" dentro da aba Sem data já abre o formulário sem dia escolhido
+  document.getElementById('btn-nova-sem-data').addEventListener('click', () => {
+    irPara('nova');
+    document.getElementById('data').value = '';
+  });
+
   document.getElementById('btn-limpar-hora').addEventListener('click', () => {
     document.getElementById('hora').value = '';
   });
@@ -618,11 +669,12 @@ function init() {
 
     const titulo = document.getElementById('titulo').value.trim();
     const data = document.getElementById('data').value;
-    const hora = document.getElementById('hora').value;
+    // sem data não tem horário
+    const hora = data ? document.getElementById('hora').value : '';
     const obs = document.getElementById('obs').value.trim();
 
-    if (!titulo || !data) {
-      mostrarToast('Preencha o que fazer e o dia.');
+    if (!titulo) {
+      mostrarToast('Preencha o que fazer.');
       return;
     }
 
@@ -640,8 +692,9 @@ function init() {
     sairDaEdicao();
     render();
 
-    irPara('agenda');
-    mostrarToast(eraEdicao ? 'Tarefa atualizada!' : `Marcado para ${nomeDoDia(data).toLowerCase()}!`);
+    irPara(data ? 'agenda' : 'semdata');
+    if (eraEdicao) mostrarToast('Tarefa atualizada!');
+    else mostrarToast(data ? `Marcado para ${nomeDoDia(data).toLowerCase()}!` : '📌 Guardado em Sem data!');
   });
 
   document.getElementById('btn-exportar').addEventListener('click', exportarCSV);
@@ -680,14 +733,15 @@ function init() {
 
   document.getElementById('btn-limpar-feitas').addEventListener('click', () => {
     const lista = carregar();
-    const { feitasAntigas } = separar(lista);
-    if (feitasAntigas.length === 0) {
+    const separadas = separar(lista);
+    const concluidas = [...separadas.feitasAntigas, ...separadas.semData.filter((t) => t.feita)];
+    if (concluidas.length === 0) {
       mostrarToast('Não há concluídas antigas.');
       return;
     }
-    const ok = confirm(`Remover ${plural(feitasAntigas.length, 'tarefa concluída', 'tarefas concluídas')} de dias que já passaram?`);
+    const ok = confirm(`Remover ${plural(concluidas.length, 'tarefa concluída', 'tarefas concluídas')} (de dias que já passaram e sem data)?`);
     if (!ok) return;
-    const remover = new Set(feitasAntigas.map((t) => t.id));
+    const remover = new Set(concluidas.map((t) => t.id));
     salvar(lista.filter((t) => !remover.has(t.id)));
     render();
     mostrarToast('Concluídas antigas removidas.');

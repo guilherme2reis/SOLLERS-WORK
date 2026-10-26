@@ -163,6 +163,15 @@ main {
 
 .btn-acao-icone { font-size: 20px; line-height: 1; }
 
+/* lembrete das tarefas sem data na agenda */
+.btn-sem-data-atalho { border-color: var(--accent); }
+.btn-sem-data-atalho .btn-acao-texto { flex: 1; }
+.btn-acao-seta { font-size: 22px; color: var(--text-dim); line-height: 1; }
+
+.titulo-sem-margem { margin: 0 !important; }
+
+#btn-nova-sem-data { margin-top: 14px; }
+
 /* ---------- formulário ---------- */
 
 .field {

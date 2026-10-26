@@ -13,6 +13,7 @@ Dia vazio não ocupa espaço na tela.
 | --- | --- |
 | **Agenda** | Tarefas pendentes de hoje e dos próximos 7 dias; bloco **⚠ Atrasadas** (dias que passaram com algo por fazer); depois um bloco por dia que tem tarefa — *Hoje*, *Amanhã*, *Quarta · qua, 14/10 · em 5 dias*… |
 | **Nova** | O que fazer, dia (com atalhos *Hoje*, *Amanhã*, *Daqui 1 semana*), horário opcional e observação opcional |
+| **Sem data** | O que precisa ser feito mas ainda não tem dia. Na Agenda aparece um lembrete *📌 Sem data · N tarefas*. Para dar um dia, toque no texto da tarefa e escolha a data: ela passa para a Agenda |
 | **Feitas** | Tarefas concluídas de dias que já passaram, das mais recentes para as mais antigas |
 | **Dados** | Exportar CSV, importar CSV, limpar concluídas antigas e apagar tudo |
 
@@ -54,8 +55,8 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = `${PREFIXO}1.2.0`;` em `sw.js`
-- `const VERSAO = '1.2.0';` em `app.js`
+- `const CACHE = `${PREFIXO}1.3.0`;` em `sw.js`
+- `const VERSAO = '1.3.0';` em `app.js`
 
 ## No computador (atalho da Área de Trabalho)
 

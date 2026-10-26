@@ -41,6 +41,12 @@
       <span class="btn-acao-texto">Nova tarefa</span>
     </button>
 
+    <button type="button" class="btn-acao btn-sem-data-atalho" id="btn-ver-sem-data" data-ir="semdata" hidden>
+      <span class="btn-acao-icone">📌</span>
+      <span class="btn-acao-texto" id="texto-ver-sem-data">Sem data</span>
+      <span class="btn-acao-seta">›</span>
+    </button>
+
     <div id="agenda-vazia" class="card empty-state" hidden>
       Nada marcado. 🎉<br>Toque em <strong>Nova tarefa</strong> para lançar um compromisso.
     </div>
@@ -60,12 +66,13 @@
         </div>
 
         <div class="field">
-          <label for="data">Dia</label>
-          <input type="date" id="data" required>
+          <label for="data">Dia <span class="opcional">(deixe vazio se ainda não sabe quando)</span></label>
+          <input type="date" id="data">
           <div class="atalhos">
             <button type="button" class="atalho" data-dias="0">Hoje</button>
             <button type="button" class="atalho" data-dias="1">Amanhã</button>
             <button type="button" class="atalho" data-dias="7">Daqui 1 semana</button>
+            <button type="button" class="atalho" id="btn-sem-data">📌 Sem data</button>
           </div>
         </div>
 
@@ -86,6 +93,32 @@
         <button type="button" class="btn-secundario" id="btn-cancelar-edicao" hidden>Cancelar edição</button>
       </form>
     </section>
+  </section>
+
+  <!-- ============ SEM DATA ============ -->
+  <section id="view-semdata" class="view">
+
+    <section class="card">
+      <div class="dia-topo">
+        <h2 class="titulo-sem-margem">Ainda sem dia marcado</h2>
+        <span class="dia-data" id="total-sem-data"></span>
+      </div>
+      <p class="texto-ajuda">
+        Coisas que você precisa fazer mas ainda não decidiu quando. Toque no texto para escolher
+        um dia: a tarefa passa para a Agenda.
+      </p>
+      <div id="sem-data-vazio" class="empty-state" hidden>
+        Nada pendente sem data.
+      </div>
+      <ul id="lista-sem-data" class="lista"></ul>
+      <button type="button" class="btn-secundario" id="btn-nova-sem-data">➕ Nova tarefa sem data</button>
+    </section>
+
+    <section class="card" id="bloco-sem-data-feitas" hidden>
+      <h2>Feitas</h2>
+      <ul id="lista-sem-data-feitas" class="lista"></ul>
+    </section>
+
   </section>
 
   <!-- ============ FEITAS ============ -->
@@ -128,7 +161,8 @@
     <section class="card">
       <h2>Limpar concluídas</h2>
       <p class="texto-ajuda">
-        Remove as tarefas já feitas de dias que passaram (as da tela <strong>Feitas</strong>).
+        Remove as tarefas já feitas de dias que passaram (as da tela <strong>Feitas</strong>) e as
+        feitas da aba <strong>Sem data</strong>.
       </p>
       <button type="button" class="btn-secundario" id="btn-limpar-feitas">🧹 Limpar concluídas antigas</button>
     </section>
@@ -155,6 +189,9 @@
   </button>
   <button type="button" class="tab" data-ir="nova">
     <span class="tab-icone">➕</span><span class="tab-label">Nova</span>
+  </button>
+  <button type="button" class="tab" data-ir="semdata">
+    <span class="tab-icone">📌</span><span class="tab-label">Sem data</span>
   </button>
   <button type="button" class="tab" data-ir="feitas">
     <span class="tab-icone">✓</span><span class="tab-label">Feitas</span>
