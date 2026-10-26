@@ -55,8 +55,8 @@ No celular, abra o endereço e use **Adicionar à tela de início**.
 Sempre que alterar `index.html`, `style.css` ou `app.js`, suba o número em **duas linhas**,
 senão o celular continua com a versão antiga guardada para uso offline:
 
-- `const CACHE = `${PREFIXO}1.3.0`;` em `sw.js`
-- `const VERSAO = '1.3.0';` em `app.js`
+- `const CACHE = `${PREFIXO}1.4.0`;` em `sw.js`
+- `const VERSAO = '1.4.0';` em `app.js`
 
 ## No computador (atalho da Área de Trabalho)
 
@@ -69,6 +69,20 @@ do navegador forem limpos. Toda gravação também deixa uma cópia do dia em `b
 (as dos últimos 60 dias).
 
 `dados.json` e `backups/` estão no `.gitignore`: são seus dados e não vão para o GitHub.
+
+### Painel de tela cheia
+
+O atalho **SOLLERS WORK PAINEL** abre `painel.html` maximizado, com as mesmas tarefas
+(`dados.json`) em quatro colunas: **Hoje** (com as atrasadas em cima), **Próximos dias** (só os
+dias que têm tarefa), **📌 Sem data** e **✓ Feitas** (últimos 7 dias). No topo ficam os
+contadores e uma barra para lançar com Enter.
+
+- clique no círculo para concluir; clique duplo no cartão (ou ✏️) para editar;
+- arraste o cartão para *Hoje*, para um dia de *Próximos dias*, para *Sem data* ou para *Feitas*.
+
+O painel e a janela pequena podem ficar abertos juntos: cada mudança relê o arquivo antes de
+gravar, e a janela pequena se atualiza quando volta a ficar ativa. O painel só funciona
+pelo atalho (no GitHub Pages ele mostra um aviso).
 
 Se aparecer o aviso "⚠ Não gravou no arquivo", feche a janela e abra pelo atalho de novo.
 

@@ -5,6 +5,7 @@ tarefas em dados.json, nesta pasta. Assim elas não dependem da memória do Chro
 que muda de perfil para perfil e some quando o navegador é limpo.
 
 Se o servidor já estiver ligado (segundo clique no atalho), só abre a janela.
+Com --painel abre o painel de tela cheia (painel.html) em vez do app compacto.
 Usa apenas a biblioteca padrão do Python.
 """
 
@@ -124,11 +125,15 @@ def ja_esta_ligado():
 
 
 def abrir_janela():
+    if '--painel' in sys.argv:
+        endereco, tamanho = ENDERECO + 'painel.html', '--start-maximized'
+    else:
+        endereco, tamanho = ENDERECO, '--window-size=460,860'
     for chrome in CHROMES:
         if chrome.exists():
-            subprocess.Popen([str(chrome), f'--app={ENDERECO}', '--window-size=460,860'])
+            subprocess.Popen([str(chrome), f'--app={endereco}', tamanho])
             return
-    webbrowser.open(ENDERECO)
+    webbrowser.open(endereco)
 
 
 def main():

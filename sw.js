@@ -1,5 +1,5 @@
 const PREFIXO = 'sollers-work-';
-const CACHE = `${PREFIXO}1.3.0`;
+const CACHE = `${PREFIXO}1.4.0`;
 const ARQUIVOS = ['./', './index.html', './style.css', './app.js', './manifest.json',
   './icon-192.png', './icon-512.png'];
 

@@ -1,4 +1,4 @@
-const VERSAO = '1.3.0';
+const VERSAO = '1.4.0';
 const STORAGE_KEY = 'sollerswork.tarefas';
 // chave da primeira versão do app: lida enquanto a nova ainda não existe, para não perder nada
 const STORAGE_KEY_ANTIGA = 'agendei.tarefas';
@@ -778,6 +778,11 @@ function init() {
 
   render();
   carregarDoArquivo();
+
+  // o painel do computador pode ter mudado o arquivo enquanto esta janela estava atrás
+  window.addEventListener('focus', () => {
+    if (arquivoAtivo && !editandoId) carregarDoArquivo();
+  });
 }
 
 init();

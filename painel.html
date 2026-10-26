@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>SOLLERS WORK · Painel</title>
+<link rel="icon" href="icon-192.png">
+<link rel="stylesheet" href="painel.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo-linha">
+    <div>
+      <h1>📅 SOLLERS WORK <span class="topo-sub">Painel</span></h1>
+      <div class="hoje-extenso" id="hoje-extenso">—</div>
+    </div>
+    <div class="contadores">
+      <div class="contador contador-alerta" id="cont-atrasadas-box">
+        <span class="contador-num" id="cont-atrasadas">0</span>
+        <span class="contador-rotulo">⚠ atrasadas</span>
+      </div>
+      <div class="contador">
+        <span class="contador-num" id="cont-hoje">0</span>
+        <span class="contador-rotulo">para hoje</span>
+      </div>
+      <div class="contador">
+        <span class="contador-num" id="cont-semana">0</span>
+        <span class="contador-rotulo">próximos 7 dias</span>
+      </div>
+      <div class="contador">
+        <span class="contador-num" id="cont-semdata">0</span>
+        <span class="contador-rotulo">📌 sem data</span>
+      </div>
+      <div class="contador">
+        <span class="contador-num" id="cont-feitas">0</span>
+        <span class="contador-rotulo">✓ feitas na semana</span>
+      </div>
+    </div>
+  </div>
+
+  <form class="lancar" id="form-lancar" autocomplete="off">
+    <input type="text" id="novo-titulo" placeholder="O que fazer? (Enter para adicionar)" required>
+    <input type="date" id="novo-data" title="Dia (vazio = sem data)">
+    <div class="lancar-atalhos">
+      <button type="button" class="chip" data-novo-dias="0">Hoje</button>
+      <button type="button" class="chip" data-novo-dias="1">Amanhã</button>
+      <button type="button" class="chip" data-novo-dias="">📌 Sem data</button>
+    </div>
+    <input type="time" id="novo-hora" title="Horário (opcional)">
+    <input type="text" id="novo-obs" placeholder="Observação (opcional)">
+    <button type="submit" class="btn-principal">➕ Adicionar</button>
+  </form>
+</header>
+
+<div class="aviso-servidor" id="aviso-servidor" hidden>
+  ⚠ Não consegui ler as tarefas. Abra o painel pelo atalho <strong>SOLLERS WORK PAINEL</strong> da
+  Área de Trabalho (ele liga o programa que guarda as tarefas no computador).
+</div>
+
+<main class="colunas">
+
+  <section class="coluna" data-soltar="hoje">
+    <div class="coluna-topo">
+      <h2>Hoje</h2>
+      <span class="coluna-dica">solte aqui para fazer hoje</span>
+    </div>
+    <div class="coluna-corpo">
+      <div class="grupo grupo-alerta" id="grupo-atrasadas" hidden>
+        <div class="grupo-topo"><span class="grupo-nome">⚠ Atrasadas</span><span class="grupo-info" id="info-atrasadas"></span></div>
+        <div class="lista" id="lista-atrasadas"></div>
+      </div>
+      <div class="lista" id="lista-hoje"></div>
+      <div class="vazio" id="vazio-hoje" hidden>Nada marcado para hoje. 🎉</div>
+    </div>
+  </section>
+
+  <section class="coluna">
+    <div class="coluna-topo">
+      <h2>Próximos dias</h2>
+      <span class="coluna-dica">só os dias que têm tarefa</span>
+    </div>
+    <div class="coluna-corpo" id="lista-proximos"></div>
+    <div class="vazio" id="vazio-proximos" hidden>Nenhum compromisso nos próximos dias.</div>
+  </section>
+
+  <section class="coluna" data-soltar="semdata">
+    <div class="coluna-topo">
+      <h2>📌 Sem data</h2>
+      <span class="coluna-dica">ainda não decidi quando</span>
+    </div>
+    <div class="coluna-corpo">
+      <div class="lista" id="lista-semdata"></div>
+      <div class="vazio" id="vazio-semdata" hidden>Nada pendente sem data.</div>
+    </div>
+  </section>
+
+  <section class="coluna coluna-feitas" data-soltar="feita">
+    <div class="coluna-topo">
+      <h2>✓ Feitas</h2>
+      <span class="coluna-dica">últimos 7 dias · solte aqui para concluir</span>
+    </div>
+    <div class="coluna-corpo" id="lista-feitas"></div>
+    <div class="vazio" id="vazio-feitas" hidden>Nada concluído nos últimos 7 dias.</div>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  Clique no círculo para concluir · clique duas vezes no cartão para editar · arraste o cartão para mudar o dia
+</footer>
+
+<dialog id="dlg-editar">
+  <form method="dialog" id="form-editar" autocomplete="off">
+    <h3>Editar tarefa</h3>
+    <label>O que fazer
+      <input type="text" id="ed-titulo" required>
+    </label>
+    <label>Dia <span class="opcional">(vazio = sem data)</span>
+      <input type="date" id="ed-data">
+    </label>
+    <div class="lancar-atalhos">
+      <button type="button" class="chip" data-ed-dias="0">Hoje</button>
+      <button type="button" class="chip" data-ed-dias="1">Amanhã</button>
+      <button type="button" class="chip" data-ed-dias="7">Daqui 1 semana</button>
+      <button type="button" class="chip" data-ed-dias="">📌 Sem data</button>
+    </div>
+    <label>Horário <span class="opcional">(opcional)</span>
+      <input type="time" id="ed-hora">
+    </label>
+    <label>Observação <span class="opcional">(opcional)</span>
+      <input type="text" id="ed-obs">
+    </label>
+    <div class="dlg-botoes">
+      <button type="button" class="btn-perigo" id="ed-excluir">Excluir</button>
+      <span class="espaco"></span>
+      <button type="button" class="btn-secundario" id="ed-cancelar">Cancelar</button>
+      <button type="submit" class="btn-principal" id="ed-salvar">Salvar</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="painel.js"></script>
+</body>
+</html>
