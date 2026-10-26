@@ -99,6 +99,8 @@ function enviarParaArquivo(json) {
 }
 
 async function carregarDoArquivo() {
+  // só o iniciar.pyw serve o app em 127.0.0.1; no celular nem tenta
+  if (location.hostname !== '127.0.0.1') return;
   let resposta;
   try {
     resposta = await fetch(API_TAREFAS, { cache: 'no-store' });
